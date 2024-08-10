@@ -9,6 +9,10 @@
 		if (event.key === ' ') {
 			event.preventDefault();
 			if (!value) return;
+			if ($current.tags.includes(value)) {
+				value = '';
+				return;
+			}
 			$current.tags = [...$current.tags, value];
 			value = '';
 		}

@@ -5,7 +5,7 @@
 
 <!-- Open the modal using ID.showModal() method -->
 <button
-	class="btn"
+	class="btn btn-neutral"
 	on:click={() => {
 		modal.showModal();
 	}}>Change Theme</button

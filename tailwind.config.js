@@ -1,9 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ['./src/**/*.{html,svelte,js,ts}'],
-  theme: {
-    extend: {},
-  },
+    theme: {
+        extend: {
+          strokeWidth: {
+           '6':'6',
+           '4':'4'
+          }
+        }
+      },
   plugins: [require('daisyui')],
   daisyui: {
     themes: [
