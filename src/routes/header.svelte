@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import ThemeModal from './theme-modal.svelte';
+	import ThemeModal from './theme-controller/theme-modal.svelte';
 
 	function handleOnClick(event: Event) {
 		goto('/');
 	}
 </script>
 
-<div class="navbar bg-base-100">
+<div class="flex bg-base-100 m-4">
 	<div class="flex-1">
 		<!-- <img src={icon} alt="icon" id="icon" /> -->
 		<button

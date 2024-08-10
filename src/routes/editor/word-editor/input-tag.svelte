@@ -23,8 +23,8 @@
 			}
 			dispatch('create', {});
 		} else if (event.key === 'Backspace') {
-			event.preventDefault();
 			if (tail.length === 0) {
+				event.preventDefault();
 				dispatch('delete', {});
 			}
 		} else if (event.key === 'Tab') {
@@ -78,6 +78,7 @@
 	bind:this={inputBind}
 	value={fullWord}
 	spellcheck="false"
+	autocomplete="off"
 	class="btn btn-accent"
 	id="word-editor-input"
 	style={inputStyle}

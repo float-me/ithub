@@ -11,4 +11,4 @@
 	}
 </script>
 
-<button class="btn btn-neutral" on:click={handleClick}>#{name}</button>
+<button class="btn btn-secondary" on:click={handleClick}>#{name}</button>

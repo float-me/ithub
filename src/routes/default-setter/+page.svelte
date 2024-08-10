@@ -39,10 +39,12 @@
 		>시작 단어를 입력하세요! (시작 음절만 고정됩니다, 스페이스로 넘어가기)</span
 	>
 </div>
-<input
-	class="input input-accent"
-	on:keydown={handleKeyDown}
-	bind:value
-	use:init
-	spellcheck="false"
-/>
+<div class="m-4">
+	<input
+		class="input input-accent"
+		on:keydown={handleKeyDown}
+		bind:value
+		use:init
+		spellcheck="false"
+	/>
+</div>

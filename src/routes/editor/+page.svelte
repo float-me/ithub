@@ -13,36 +13,28 @@
 	let propEditor: PropEditor;
 </script>
 
-<div class="flex w-full flex-col border-opacity-50">
-	<!-- Content Area -->
-	<main class="flex-1 p-4">
-		<!-- Top Card (100% width, narrow vertically) -->
-		<div class="w-full mb-4">
-			<div class="card bg-base-100 shadow-xl">
-				<div class="card-body p-4">
-					<h2 class="card-title">Top Task (100% width)</h2>
-					<p>Description of the top task.</p>
-				</div>
-			</div>
+<div class="m-4">
+	<div class="card bg-neutral shadow-xl">
+		<div class="card-body p-4">
+			<h2 class="card-title">Top Task (100% width)</h2>
+			<p>Description of the top task.</p>
 		</div>
-		<!-- Bottom Cards (70% and 30% width, fit vertically) -->
-		<div class="flex flex-wrap lg:flex-nowrap h-full">
-			<!-- Left Card (70% width) --><div class="w-full lg:w-3/4 lg:mr-4 h-full">
-				<div class="card bg-base-100 shadow-xl h-full">
-					<div class="card-body p-4 h-full">
-						<WordEditor {defaultStr} bind:this={wordEditor} />
-					</div>
-				</div>
-			</div>
+	</div>
+</div>
 
-			<!-- Right Card (30% width) -->
-			<div class="w-full lg:w-1/4">
-				<div class="card bg-base-200 shadow-xl h-full">
-					<div class="card-body p-4 h-full">
-						<PropEditor bind:this={propEditor} />
-					</div>
-				</div>
+<div class="grid grid-cols-4 gap-4 m-4">
+	<div class="col-span-3">
+		<div class="card bg-base-100 shadow-xl">
+			<div class="card-body p-4">
+				<WordEditor {defaultStr} bind:this={wordEditor} />
 			</div>
 		</div>
-	</main>
+	</div>
+	<div>
+		<div class="card bg-neutral shadow-xl">
+			<div class="card-body p-4">
+				<PropEditor bind:this={propEditor} />
+			</div>
+		</div>
+	</div>
 </div>

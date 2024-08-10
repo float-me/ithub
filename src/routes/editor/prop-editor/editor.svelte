@@ -25,11 +25,13 @@
 	}
 </script>
 
-<div class="join join-vertical">
-	<div class="container">
-		{#each $current.tags as name, index}
-			<PropTag {name} {index} on:select={handleOnSelect} />
-		{/each}
+<div class="join join-vertical gap-4">
+	<div class="card bg-base-100 p-4">
+		<div class="flex flex-wrap gap-x-2 gap-y-4">
+			{#each $current.tags as name, index}
+				<PropTag {name} {index} on:select={handleOnSelect} />
+			{/each}
+		</div>
 	</div>
 	<input
 		class="input w-max"
@@ -38,14 +40,7 @@
 		bind:this={inputBind}
 		on:keydown={handleKeyDown}
 		use:init
+		spellcheck="false"
+		autocomplete="off"
 	/>
 </div>
-
-<style>
-	.container {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap; /* Allows tags to wrap to the next line if needed */
-		gap: 10px; /* Adjust the spacing as needed */
-	}
-</style>
