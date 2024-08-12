@@ -25,17 +25,25 @@
 			$searched = false;
 		} else if (event.key === 'Enter') {
 			if ($searched) {
-				index += 1;
-				if (index === result.length) index = 0;
-				$current = result[index];
+				if (result.length > 0) {
+					index += 1;
+					if (index === result.length) index = 0;
+					setCurrent();
+				}
 			} else {
 				let searchSet = new Set(tags);
 				result = $root.search(searchSet);
-				if (result.length > 0) $current = result[0];
 				index = 0;
+				setCurrent();
 				$searched = true;
 			}
 		}
+	}
+
+	function setCurrent() {
+		let node = result[index];
+		node.clearChild();
+		$current = node;
 	}
 
 	function handleOnSelect(event: CustomEvent<{ index: number }>) {
