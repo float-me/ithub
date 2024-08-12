@@ -144,7 +144,7 @@ export class WordNode {
         if (searchSet.isSubsetOf(new Set(this.tags))) {
             result = [this]
         }
-        if (this.child) result = [...result, ...this.child.search(searchSet)]
+        if (this.child && this.child.tagged) result = [...result, ...this.child.search(searchSet)]
         for (let i = 0; i < this.routes.length; i++) {
             const route = this.routes[i]
             result = [...result, ...route.search(searchSet)]
