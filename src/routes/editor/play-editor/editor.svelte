@@ -27,9 +27,14 @@
 					let outWords = $wordGraph.charMap.get(head)?.outWords;
 					if (!outWords) continue;
 					for (let word of outWords) {
-						if ($current.before.map((x) => x.word).includes(word)) continue;
+						if ($current.before.map((x) => x.word).includes(word))
+							continue;
 						if (word[word.length - 1] === newWord.last) {
-							newWord = new Word(newWord.head, word.slice(1), index);
+							newWord = new Word(
+								newWord.head,
+								word.slice(1),
+								index,
+							);
 							fail = false;
 							break;
 						}
@@ -38,23 +43,22 @@
 				}
 			}
 			if (fail) {
-				let clearWord = new Word(newWord.head, '', newWord.headingIndex);
+				let clearWord = new Word(
+					newWord.head,
+					'',
+					newWord.headingIndex,
+				);
 				$current.word = clearWord;
 				return;
 			}
 		}
-		let newCurrent = new Word(newWord.last, '', 0);
-		$current.word = newWord;
-		$current = $current.setChild(newCurrent);
+		$current = $current.createChild(newWord);
 	}
 
 	function handleDelete(event: CustomEvent<{}>) {
 		if ($current.parent) {
-			let last = $current.parent.word;
-			let newWord = new Word(last.head, '', last.headingIndex);
 			$current = $current.parent;
-			$current.setChild(undefined);
-			$current.word = newWord;
+			$current.clearChild();
 		} else {
 			return;
 		}
@@ -81,17 +85,21 @@
 			case 'Control':
 				break;
 			default:
+				console.log('default case');
 				if (!isSelecting) {
 					inputTag.handleKeyDown(event);
 				} else {
-					$current.setChild(undefined);
-					$current.word = new Word($current.word.head, '', $current.word.headingIndex);
+					console.log('selecting case');
+					$current.clearChild();
+					$current = $current;
 					inputTag.handleSelectingKeyDown(event);
 				}
 		}
 	}
 
-	function handleSelect(event: CustomEvent<{ index: number; isBefore: boolean }>) {
+	function handleSelect(
+		event: CustomEvent<{ index: number; isBefore: boolean }>,
+	) {
 		if (event.detail.isBefore) {
 			let beforeStep = $current.before.length - event.detail.index;
 			for (let i = 0; i < beforeStep; i++) {
@@ -109,7 +117,7 @@
 	}
 </script>
 
-<div class="container">
+<div class="flex flex-wrap gap-4">
 	{#each $current.before as word, i}
 		<WordTag on:select={handleSelect} index={i} isBefore={true} {word} />
 	{/each}
@@ -124,12 +132,3 @@
 		<WordTag on:select={handleSelect} index={i} isBefore={false} {word} />
 	{/each}
 </div>
-
-<style>
-	.container {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap; /* Allows tags to wrap to the next line if needed */
-		gap: 10px; /* Adjust the spacing as needed */
-	}
-</style>

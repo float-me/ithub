@@ -1,6 +1,6 @@
 <script lang="ts">
-	import WordEditor from './word-editor/editor.svelte';
-	import PropEditor from './prop-editor/editor.svelte';
+	import PlayEditor from './play-editor/editor.svelte';
+	import TagEditor from './tag-editor/editor.svelte';
 	import { page } from '$app/stores';
 
 	interface PageState {
@@ -9,8 +9,8 @@
 
 	$: state = ($page as unknown as { state: PageState }).state;
 	$: defaultStr = state.defaultStr;
-	let wordEditor: WordEditor;
-	let propEditor: PropEditor;
+	let wordEditor: PlayEditor;
+	let propEditor: TagEditor;
 </script>
 
 <div class="m-4">
@@ -26,14 +26,14 @@
 	<div class="col-span-3">
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body p-4">
-				<WordEditor {defaultStr} bind:this={wordEditor} />
+				<PlayEditor {defaultStr} bind:this={wordEditor} />
 			</div>
 		</div>
 	</div>
 	<div>
 		<div class="card bg-neutral shadow-xl">
 			<div class="card-body p-4">
-				<PropEditor bind:this={propEditor} />
+				<TagEditor bind:this={propEditor} />
 			</div>
 		</div>
 	</div>

@@ -13,14 +13,13 @@
 				value = '';
 				return;
 			}
-			$current.tags = [...$current.tags, value];
+			$current.tags = $current.tag(value);
 			value = '';
 		}
 	}
 
 	function handleOnSelect(event: CustomEvent<{ index: number }>) {
-		$current.tags.splice(event.detail.index, 1);
-		$current.tags = $current.tags;
+		$current.tags = $current.untag(event.detail.index);
 		inputBind.focus();
 	}
 

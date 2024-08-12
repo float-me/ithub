@@ -49,18 +49,67 @@ export class WordNode {
         return (this.word === undefined)
     }
 
-    setChild(child: Word|undefined) {
+    createChild(newWord: Word) {
+        this.word = newWord
+        let child = new Word(newWord.last, '', 0);
+
+        for (let index = 0; index < this.routes.length; index++) {
+            const route = this.routes[index];
+            if (route.word.head === newWord.last) {
+                this.child = route
+                this.routes.splice(index, 1)
+                if (route.child) {
+                    route.routes.push(route.child)
+                    route.child = undefined
+                }
+                route.word = child
+                return route
+            }
+        }
+        
+        return this.setNovelChild(child)
+    }
+
+    setNovelChild(child: Word) {
+        let childNode = new WordNode(child, this, undefined)
+        this.child = childNode
+        return childNode
+    }
+
+    clearChild() {
         if (this.child && this.child.tagged) {
             this.routes.push(this.child)
         }
-        if (child) {
-            let childNode = new WordNode(child, this, undefined)
-            this.child = childNode
-            return childNode
-        } else {
-            this.child = undefined
-            return this
+        this.child = undefined
+        this.word = new Word(this.word.head, '', this.word.headingIndex)
+    }
+    
+    tag(newTag: string) {
+        let par: WordNode | undefined = this;
+        while (par) {
+            par.tagged = true
+            par = par.parent
         }
+        return [...this.tags, newTag]
+    }
+
+    untag(index: number) {
+        this.tags.splice(index, 1)
+        let par: WordNode | undefined = this
+        while (par) {
+            if (par.tags.length > 0) break
+            if (this.child && this.child.tagged) break
+            this.routes.forEach(route => {
+                if (route.tagged) return this.tags
+            });
+            par.tagged = false
+            if (par.parent && par.parent.routes.includes(par)) {
+                let index = par.parent.routes.indexOf(par)
+                par.parent.routes.splice(index, 1)
+            }
+            par = par.parent
+        }
+        return this.tags
     }
 
     get before() : Word[]{
