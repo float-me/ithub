@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { wordGraph } from './word-graph-store';
+	import { wordGraph } from '$lib/stores/word-graph-store';
 	import { WordGraph } from '$lib/graph';
 
 	async function fetchWordList(url: URL) {

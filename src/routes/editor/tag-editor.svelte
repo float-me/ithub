@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PropTag from './prop-tag.svelte';
-	import { current } from '../current-store';
+	import Tag from './tag.svelte';
+	import { current } from '../../lib/stores/word-node-store';
 
 	let value: string;
 	let inputBind: HTMLInputElement;
@@ -32,7 +32,7 @@
 	<div class="card bg-base-100 p-4">
 		<div class="flex flex-wrap gap-x-2 gap-y-4">
 			{#each $current.tags as name, index}
-				<PropTag {name} {index} on:select={handleOnSelect} />
+				<Tag {name} {index} on:select={handleOnSelect} />
 			{/each}
 		</div>
 	</div>

@@ -2,13 +2,14 @@
 	import WordTag from './word-tag.svelte';
 	import InputTag from './input-tag.svelte';
 	import { Word, WordNode } from '$lib/word';
-	import { wordGraph } from '../../word-graph-store';
-	import { current } from '../current-store';
+	import { wordGraph } from '$lib/stores/word-graph-store';
+	import { current, root } from '$lib/stores/word-node-store';
 
 	export let defaultStr: string;
 
 	let defaultWord = new Word(defaultStr[0], defaultStr.slice(1), 0);
 	$current = new WordNode(defaultWord, undefined, undefined);
+	$root = $current;
 	$: isSelecting = $current.child !== undefined;
 
 	let inputTag: InputTag;
@@ -117,7 +118,7 @@
 	}
 </script>
 
-<div class="flex flex-wrap gap-4">
+<div class="flex flex-wrap gap-x-2 gap-y-4">
 	{#each $current.before as word, i}
 		<WordTag on:select={handleSelect} index={i} isBefore={true} {word} />
 	{/each}
@@ -131,4 +132,13 @@
 	{#each $current.after as word, i}
 		<WordTag on:select={handleSelect} index={i} isBefore={false} {word} />
 	{/each}
+	<div class="join join-vertical">
+		{#each $current.accumulatedTags as tag}
+			<input
+				type="radio"
+				class="btn join-item inactive"
+				aria-label={tag}
+			/>
+		{/each}
+	</div>
 </div>

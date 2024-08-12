@@ -5,10 +5,14 @@
 
 	export let name: string;
 	export let index: number;
+	export let color = 'secondary';
+
+	$: cls = 'btn btn-' + color;
+	console.log(cls);
 
 	function handleClick(event: MouseEvent) {
 		dispatch('select', { index: index });
 	}
 </script>
 
-<button class="btn btn-secondary" on:click={handleClick}>#{name}</button>
+<button class={cls} on:click={handleClick}>#{name}</button>

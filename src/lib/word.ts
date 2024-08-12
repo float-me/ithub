@@ -35,18 +35,14 @@ export class WordNode {
     child: WordNode|undefined
     routes: WordNode[]
     tags: string[]
-    tagged: boolean
+    accumulatedTags: Set<string>
     constructor(word: Word, parent: WordNode|undefined, child: WordNode|undefined) {
         this.word = word
         this.parent = parent
         this.child = child
         this.routes = []
         this.tags = []
-        this.tagged = false
-    }
-
-    isRoot() {
-        return (this.word === undefined)
+        this.accumulatedTags = new Set()
     }
 
     createChild(newWord: Word) {
@@ -83,33 +79,81 @@ export class WordNode {
         this.child = undefined
         this.word = new Word(this.word.head, '', this.word.headingIndex)
     }
+
+    get tagged() {
+        return this.accumulatedTags.size > 0
+    }
+
+    get tagSet() {
+        return new Set(this.tags)
+    }
     
     tag(newTag: string) {
         let par: WordNode | undefined = this;
         while (par) {
-            par.tagged = true
+            par.accumulatedTags.add(newTag)
             par = par.parent
         }
         return [...this.tags, newTag]
     }
 
     untag(index: number) {
-        this.tags.splice(index, 1)
+        let tag = this.tags.splice(index, 1).at(0)
+        if (!tag) return this.tags // Doesn't happen
         let par: WordNode | undefined = this
         while (par) {
-            if (par.tags.length > 0) break
-            if (this.child && this.child.tagged) break
-            this.routes.forEach(route => {
-                if (route.tagged) return this.tags
-            });
-            par.tagged = false
-            if (par.parent && par.parent.routes.includes(par)) {
-                let index = par.parent.routes.indexOf(par)
-                par.parent.routes.splice(index, 1)
+            if (par.child && par.child.accumulatedTags.has(tag)) return this.tags
+
+            for (let index = 0; index < par.routes.length; index++) {
+                const route = par.routes[index];
+                if (route.accumulatedTags.has(tag)) return this.tags
             }
+
+            par.accumulatedTags.delete(tag)
+
+            if (!par.tagged) {
+                par.removeFromParRoutes()
+            }
+
             par = par.parent
         }
         return this.tags
+    }
+
+    removeFromParRoutes() {
+        if (this.parent && this.parent.routes.includes(this)) {
+            let index = this.parent.routes.indexOf(this)
+            this.parent.routes.splice(index, 1)
+        }
+    }
+
+    setAsChild() {
+        if (!this.parent) return
+        this.parent.clearChild()
+        this.parent.child = this
+        this.removeFromParRoutes()
+    }
+
+    search(searchSet: Set<string>) {
+        let result: WordNode[] = []
+        if (this.tagSet.isSupersetOf(searchSet)) {
+            result = [this]
+        }
+        if (this.child) result = [...result, ...this.child.search(searchSet)]
+        for (let i = 0; i < this.routes.length; i++) {
+            const route = this.routes[i]
+            result = [...result, ...route.search(searchSet)]
+        }
+        return result
+    }
+
+    currentify() {
+        this.clearChild()
+        let par: WordNode | undefined = this
+        while (par) {
+            par.setAsChild()
+            par = par.parent
+        }
     }
 
     get before() : Word[]{

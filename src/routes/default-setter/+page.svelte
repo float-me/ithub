@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { wordGraph } from '../word-graph-store';
+	import { wordGraph } from '$lib/stores/word-graph-store';
 	import { goto } from '$app/navigation';
 
 	let defaultStr: string;
