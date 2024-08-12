@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { searched } from '$lib/stores/search-state-store';
 	import { current, root } from '$lib/stores/word-node-store';
+	import type { WordNode } from '$lib/word';
 	import SearchIcon from './search-icon.svelte';
 	import Tag from './tag.svelte';
 
@@ -7,6 +9,8 @@
 	let inputBind: HTMLInputElement;
 
 	let tags: string[] = [];
+	let index = 0;
+	let result: WordNode[] = [];
 
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === ' ') {
@@ -18,16 +22,26 @@
 			}
 			tags = [...tags, value];
 			value = '';
+			$searched = false;
 		} else if (event.key === 'Enter') {
-			let searchSet = new Set(tags);
-			let result = $root.search(searchSet);
-			if (result.length > 0) $current = result[0];
+			if ($searched) {
+				index += 1;
+				if (index === result.length) index = 0;
+				$current = result[index];
+			} else {
+				let searchSet = new Set(tags);
+				result = $root.search(searchSet);
+				if (result.length > 0) $current = result[0];
+				index = 0;
+				$searched = true;
+			}
 		}
 	}
 
 	function handleOnSelect(event: CustomEvent<{ index: number }>) {
 		tags.splice(event.detail.index, 1);
 		tags = tags;
+		$searched = false;
 		inputBind.focus();
 	}
 </script>
@@ -53,4 +67,12 @@
 	{#each tags as name, index}
 		<Tag {name} {index} color="primary" on:select={handleOnSelect} />
 	{/each}
+
+	{#if $searched}
+		{#if result.length > 0}
+			<div class="btn btn-primary">({index + 1}/{result.length})</div>
+		{:else}
+			<div class="btn btn-primary">(0/0)</div>
+		{/if}
+	{/if}
 </div>
