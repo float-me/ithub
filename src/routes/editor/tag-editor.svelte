@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Tag from './tag.svelte';
-	import { current } from '../../lib/stores/word-node-store';
+	import { current } from '$lib/stores/word-node-store';
 
 	let value: string;
 	let inputBind: HTMLInputElement;

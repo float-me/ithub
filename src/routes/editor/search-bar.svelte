@@ -21,7 +21,6 @@
 		} else if (event.key === 'Enter') {
 			let searchSet = new Set(tags);
 			let result = $root.search(searchSet);
-			alert(result.map((x) => x.word.word));
 			if (result.length > 0) $current = result[0];
 		}
 	}

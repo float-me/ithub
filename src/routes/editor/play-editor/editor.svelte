@@ -1,41 +1,35 @@
 <script lang="ts">
 	import WordTag from './word-tag.svelte';
 	import InputTag from './input-tag.svelte';
-	import { Word, WordNode } from '$lib/word';
+	import { Head, WordNode } from '$lib/word';
 	import { wordGraph } from '$lib/stores/word-graph-store';
 	import { current, root } from '$lib/stores/word-node-store';
 
-	export let defaultStr: string;
+	export let defaultHeadValue: string;
+	let defaultHead = new Head(defaultHeadValue, 0);
 
-	let defaultWord = new Word(defaultStr[0], defaultStr.slice(1), 0);
-	$current = new WordNode(defaultWord, undefined, undefined);
+	$current = new WordNode(defaultHead, undefined);
 	$root = $current;
 	$: isSelecting = $current.child !== undefined;
 
 	let inputTag: InputTag;
 
 	function handleCreate(event: CustomEvent<{}>) {
-		let newWord = inputTag.getWord();
-		if (
-			!$wordGraph.has(newWord.word) ||
-			$current.before.map((x) => x.word).includes(newWord.word)
-		) {
+		let tail = inputTag.getTail();
+		let word = $current.head.value + tail;
+		if (!$wordGraph.has(word) || $current.before.includes(word)) {
 			let fail = true;
-			if (newWord.length === 2) {
-				for (let [index, head] of newWord.heading.entries()) {
+			if (word.length === 2) {
+				for (let [index, head] of $current.head.candidates.entries()) {
 					let succ = $wordGraph.charMap.get(head)?.successors;
-					if (!succ || !succ.has(newWord.last)) continue;
+					if (!succ || !succ.has(tail[tail.length - 1])) continue;
 					let outWords = $wordGraph.charMap.get(head)?.outWords;
 					if (!outWords) continue;
 					for (let word of outWords) {
-						if ($current.before.map((x) => x.word).includes(word))
-							continue;
-						if (word[word.length - 1] === newWord.last) {
-							newWord = new Word(
-								newWord.head,
-								word.slice(1),
-								index,
-							);
+						if ($current.before.includes(word)) continue;
+						if (word[word.length - 1] === tail[tail.length - 1]) {
+							$current.head.index = index;
+							tail = word.slice(1);
 							fail = false;
 							break;
 						}
@@ -44,16 +38,11 @@
 				}
 			}
 			if (fail) {
-				let clearWord = new Word(
-					newWord.head,
-					'',
-					newWord.headingIndex,
-				);
-				$current.word = clearWord;
+				inputTag.clear();
 				return;
 			}
 		}
-		$current = $current.createChild(newWord);
+		$current = $current.createChild(tail);
 	}
 
 	function handleDelete(event: CustomEvent<{}>) {
@@ -123,7 +112,6 @@
 		<WordTag on:select={handleSelect} index={i} isBefore={true} {word} />
 	{/each}
 	<InputTag
-		word={$current.word}
 		bind:this={inputTag}
 		on:create={handleCreate}
 		on:delete={handleDelete}
@@ -132,7 +120,7 @@
 	{#each $current.after as word, i}
 		<WordTag on:select={handleSelect} index={i} isBefore={false} {word} />
 	{/each}
-	<div class="join join-vertical">
+	<!-- <div class="join join-vertical">
 		{#each $current.accumulatedTags as tag}
 			<input
 				type="radio"
@@ -140,5 +128,5 @@
 				aria-label={tag}
 			/>
 		{/each}
-	</div>
+	</div> -->
 </div>

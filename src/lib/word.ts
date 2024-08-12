@@ -1,75 +1,76 @@
 import { getHeading } from './heading';
 
-export class Word {
-    head: string;
-    heading: string[]
-    tail: string;
-    headingIndex: number;
-    constructor(head: string, tail: string, headingIndex: number) {
-        this.head = head;
-        this.heading = getHeading(head);
-        this.tail = tail;
-        this.headingIndex = headingIndex;
+export class Head {
+    origin: string;
+    candidates: string[]
+    index: number;
+    constructor(origin: string, index: number) {
+        this.origin = origin;
+        this.candidates = getHeading(origin);
+        this.index = index;
     }
 
-    get curHead() {
-        return this.heading[this.headingIndex]
+    get value() {
+        return this.candidates[this.index]
     }
 
-    get last() {
-        return this.tail[this.tail.length - 1]
-    }
-
-    get length() {
-        return 1 + this.tail.length
-    }
-
-    get word() {
-        return this.curHead.concat(this.tail)
+    rotate() {
+        if (this.candidates.length === 1) return
+        this.index += 1
+        if (this.index === this.candidates.length) {
+            this.index = 0
+        }
     }
 }
 
 export class WordNode {
-    word: Word
+    head: Head
+
     parent: WordNode|undefined
+    parentTail: string
+
     child: WordNode|undefined
     routes: WordNode[]
+
     tags: string[]
     accumulatedTags: Set<string>
-    constructor(word: Word, parent: WordNode|undefined, child: WordNode|undefined) {
-        this.word = word
-        this.parent = parent
+    constructor(head: Head, child: WordNode|undefined) {
+        this.head = head
+
+        this.parent = undefined
+        this.parentTail = ''
+
         this.child = child
         this.routes = []
+
         this.tags = []
         this.accumulatedTags = new Set()
     }
 
-    createChild(newWord: Word) {
-        this.word = newWord
-        let child = new Word(newWord.last, '', 0);
-
-        for (let index = 0; index < this.routes.length; index++) {
-            const route = this.routes[index];
-            if (route.word.head === newWord.last) {
-                this.child = route
-                this.routes.splice(index, 1)
-                if (route.child) {
-                    route.routes.push(route.child)
-                    route.child = undefined
-                }
-                route.word = child
-                return route
-            }
-        }
-        
-        return this.setNovelChild(child)
+    setParent(parent: WordNode, tail: string) {
+        this.parent = parent
+        this.parentTail = tail
+        return this
     }
 
-    setNovelChild(child: Word) {
-        let childNode = new WordNode(child, this, undefined)
-        this.child = childNode
-        return childNode
+    get root() : WordNode{
+        if (this.parent) {
+            return this.parent.root
+        } else {
+            return this
+        }
+    }
+
+    get leaf() : WordNode{
+        if (this.child) {
+            return this.child.leaf
+        } else {
+            return this
+        }
+    }
+
+    get tagged() {
+        return this.accumulatedTags.size > 0
     }
 
     clearChild() {
@@ -77,24 +78,35 @@ export class WordNode {
             this.routes.push(this.child)
         }
         this.child = undefined
-        this.word = new Word(this.word.head, '', this.word.headingIndex)
     }
 
-    get tagged() {
-        return this.accumulatedTags.size > 0
-    }
-
-    get tagSet() {
-        return new Set(this.tags)
-    }
-    
-    tag(newTag: string) {
+    tag(tag: string) {
         let par: WordNode | undefined = this;
         while (par) {
-            par.accumulatedTags.add(newTag)
+            par.accumulatedTags.add(tag)
             par = par.parent
         }
-        return [...this.tags, newTag]
+        this.tags.push(tag)
+        return this.tags
+    }
+
+    createChild(tail: string) {
+        for (let index = 0; index < this.routes.length; index++) {
+            const route = this.routes[index];
+            if (route.head.value === tail[tail.length - 1]) {
+                this.child = route
+                this.routes.splice(index, 1)
+                if (route.child) {
+                    route.routes.push(route.child)
+                    route.child = undefined
+                }
+                return route
+            }
+        }
+        
+        let childHead = new Head(tail[tail.length - 1], 0)
+        this.child = new WordNode(childHead, undefined).setParent(this, tail)
+        return this.child
     }
 
     untag(index: number) {
@@ -127,16 +139,9 @@ export class WordNode {
         }
     }
 
-    setAsChild() {
-        if (!this.parent) return
-        this.parent.clearChild()
-        this.parent.child = this
-        this.removeFromParRoutes()
-    }
-
     search(searchSet: Set<string>) {
         let result: WordNode[] = []
-        if (this.tagSet.isSupersetOf(searchSet)) {
+        if (searchSet.isSubsetOf(new Set(this.tags))) {
             result = [this]
         }
         if (this.child) result = [...result, ...this.child.search(searchSet)]
@@ -147,44 +152,16 @@ export class WordNode {
         return result
     }
 
-    currentify() {
-        this.clearChild()
-        let par: WordNode | undefined = this
-        while (par) {
-            par.setAsChild()
-            par = par.parent
-        }
+    get before() : string[] {
+        if (!this.parent) return []
+        return [...this.parent.before, this.parent.head.value + this.parentTail]
     }
 
-    get before() : Word[]{
-        if (this.parent) {
-            return [...this.parent.before, this.parent.word]
-        } else {
-            return []
+    get after() : string[] {
+        if (!this.child) return []
+        if (this.child.child) {
+            return [this.child.head.value + this.child.child.parentTail, ...this.child.after]
         }
-    }
-
-    get after() : Word[]{
-        if (this.child) {
-            return [this.child.word, ...this.child.after]
-        } else {
-            return []
-        }
-    }
-
-    get root() : WordNode{
-        if (this.parent) {
-            return this.parent.root
-        } else {
-            return this
-        }
-    }
-
-    get leaf() : WordNode{
-        if (this.child) {
-            return this.child.leaf
-        } else {
-            return this
-        }
+        return [this.child.head.value]
     }
 }

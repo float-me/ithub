@@ -1,17 +1,13 @@
 <script lang="ts">
+	import { current } from '$lib/stores/word-node-store';
 	import { createEventDispatcher } from 'svelte';
-	import { Word } from '$lib/word';
 
 	const dispatch = createEventDispatcher();
 
 	let inputBind: HTMLInputElement;
 
-	export let word: Word;
-	$: tail = word.tail;
-	$: heading = word.heading;
-	$: headingIndex = word.headingIndex;
-	$: activeHead = heading[headingIndex];
-	$: fullWord = activeHead + tail;
+	$: tail = $current.child ? $current.child.parentTail : '';
+	$: fullWord = $current.head.value + tail;
 	$: inputWidth = Math.max(Math.min(fullWord.length, 10), 0.5);
 	$: inputStyle = `width: ${inputWidth + 2}rem`;
 
@@ -29,11 +25,7 @@
 			}
 		} else if (event.key === 'Tab') {
 			event.preventDefault();
-			if (heading.length == 1) return;
-			headingIndex += 1;
-			if (headingIndex === heading.length) {
-				headingIndex = 0;
-			}
+			$current.head.rotate();
 		}
 	}
 
@@ -44,11 +36,7 @@
 			event.preventDefault();
 		} else if (event.key === 'Tab') {
 			event.preventDefault();
-			if (heading.length == 1) return;
-			headingIndex += 1;
-			if (headingIndex === heading.length) {
-				headingIndex = 0;
-			}
+			$current.head.rotate();
 		}
 	}
 
@@ -60,8 +48,12 @@
 		inputBind.focus();
 	}
 
-	export function getWord() {
-		return new Word(word.head, tail, headingIndex);
+	export function getTail() {
+		return tail;
+	}
+
+	export function clear() {
+		tail = '';
 	}
 
 	function handleInput(event: Event) {

@@ -5,11 +5,11 @@
 	import SearchBar from './search-bar.svelte';
 
 	interface PageState {
-		defaultStr: string;
+		default: string;
 	}
 
 	$: state = ($page as unknown as { state: PageState }).state;
-	$: defaultStr = state.defaultStr;
+	$: defaultHeadValue = state.default;
 	let wordEditor: PlayEditor;
 	let tagEditor: TagEditor;
 </script>
@@ -26,7 +26,7 @@
 	<div class="col-span-3">
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body p-4">
-				<PlayEditor {defaultStr} bind:this={wordEditor} />
+				<PlayEditor {defaultHeadValue} bind:this={wordEditor} />
 			</div>
 		</div>
 	</div>

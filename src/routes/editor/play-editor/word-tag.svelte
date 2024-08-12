@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Word } from '$lib/word';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
-	export let word: Word;
+	export let word: string;
 	export let index: number;
 	export let isBefore: boolean;
 
@@ -12,4 +11,4 @@
 	}
 </script>
 
-<button class="btn btn-neutral" on:click={handleClick}>{word.word}</button>
+<button class="btn btn-neutral" on:click={handleClick}>{word}</button>
