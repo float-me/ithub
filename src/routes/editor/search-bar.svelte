@@ -24,12 +24,17 @@
 			value = '';
 			$searched = false;
 		} else if (event.key === 'Enter') {
-			if ($searched) {
-				if (result.length > 0) {
-					index += 1;
-					if (index === result.length) index = 0;
-					setCurrent();
+			if (value) {
+				$searched = false;
+				if (!tags.includes(value)) {
+					tags = [...tags, value];
 				}
+			}
+			value = '';
+			if ($searched) {
+				index += 1;
+				if (index === result.length) index = 0;
+				setCurrent();
 			} else {
 				let searchSet = new Set(tags);
 				result = $root.search(searchSet);
@@ -41,9 +46,11 @@
 	}
 
 	function setCurrent() {
-		let node = result[index];
-		node.clearChild();
-		$current = node;
+		if (result.length > 0) {
+			let node = result[index];
+			node.clearChild();
+			$current = node;
+		}
 	}
 
 	function handleOnSelect(event: CustomEvent<{ index: number }>) {
