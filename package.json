@@ -38,7 +38,4 @@
 		"vitest": "^2.0.0"
 	},
 	"type": "module",
-	"dependencies": {
-		"newick-js": "^1.2.1"
-	}
 }
