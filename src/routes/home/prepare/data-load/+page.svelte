@@ -44,4 +44,12 @@
 	});
 </script>
 
-<LoadingPage text={'Loading Rule...'} />
+<div class="flex flex-col h-full">
+	<ul class="steps flex-none">
+		<li class="step step-primary">Select Rule</li>
+		<li class="step step">Set Default</li>
+	</ul>
+	<div class="grow">
+		<LoadingPage text={'Loading Rule...'} />
+	</div>
+</div>

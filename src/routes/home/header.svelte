@@ -15,6 +15,7 @@
 	});
 
 	function gotoEditor(event: MouseEvent) {
+		console.log('move!');
 		goto('/home/prepare/data-load');
 	}
 </script>

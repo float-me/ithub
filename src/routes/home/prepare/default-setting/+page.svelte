@@ -20,6 +20,13 @@
 	}
 </script>
 
+<div class="flex flex-col">
+	<ul class="steps flex-none">
+		<li class="step step-primary">Select Rule</li>
+		<li class="step step-primary">Set Default</li>
+	</ul>
+</div>
+
 <div role="alert" class="alert">
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
