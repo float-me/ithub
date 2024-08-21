@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import ThemeModal from '../theme-controller/theme-modal.svelte';
+	import ThemeModal from '../components/theme-controller/theme-modal.svelte';
 	import Logo from '../components/logo.svelte';
 	import { onMount } from 'svelte';
 
@@ -12,8 +12,11 @@
 	onMount(() => {
 		let maybeHeight = document.getElementById('header')?.clientHeight;
 		height = maybeHeight ? maybeHeight : height;
-		console.log(height);
 	});
+
+	function gotoEditor(event: MouseEvent) {
+		goto('/home/prepare/data-load');
+	}
 </script>
 
 <div id="header" class="flex bg-base-100 m-4">
@@ -24,7 +27,7 @@
 		<p class="font-bold text-xl text-primary">잇허브</p>
 		<p class="text-sm pl-2">끝말잇기 연구 통합 플랫폼</p>
 	</div>
-	<button class="btn btn-ghost">Editor</button>
+	<button class="btn btn-ghost" on:click={gotoEditor}>Editor</button>
 	<div class="flex-none align-middle">
 		<ThemeModal />
 	</div>

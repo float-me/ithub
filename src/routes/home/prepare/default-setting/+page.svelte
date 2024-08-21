@@ -8,7 +8,7 @@
 		if (event.key === ' ') {
 			event.preventDefault();
 			if (value.length === 0) return;
-			goto('../editor');
+			goto('/editor');
 			let defaultHead = new Head(value[0], 0);
 
 			$current = new WordNode(defaultHead, undefined);
