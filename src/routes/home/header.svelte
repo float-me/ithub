@@ -20,26 +20,32 @@
 	}
 </script>
 
-<div id="header" class="flex bg-base-100 m-4">
-	<div class="flex-none mr-4">
-		<Logo on:click={handleOnClick} {height} />
-	</div>
-	<div id="header-explain" class="align-middle" style="user-drag: none;">
-		<p class="font-bold text-xl text-primary">잇허브</p>
-		<p class="text-sm pl-2">끝말잇기 연구 통합 플랫폼</p>
-	</div>
-	<button class="btn btn-ghost" on:click={gotoEditor}>Editor</button>
-	<div class="flex-none align-middle">
-		<ThemeModal />
+<div class="m-2">
+	<div class="navbar bg-base-300 rounded-md">
+		<div class="navbar-start" id="header">
+			<div class="flex-none mr-4">
+				<Logo on:click={handleOnClick} {height} />
+			</div>
+			<div
+				id="header-explain"
+				class="align-middle"
+				style="user-drag: none;"
+			>
+				<p class="font-bold text-xl text-primary">잇허브</p>
+				<p class="text-sm pl-2">끝말잇기 연구 통합 플랫폼</p>
+			</div>
+		</div>
+		<div class="navbar-center hidden lg:flex">
+			<ul class="menu menu-horizontal px-1">
+				<li>
+					<button class="btn btn-ghost" on:click={gotoEditor}
+						>Editor</button
+					>
+				</li>
+			</ul>
+		</div>
+		<div class="navbar-end">
+			<ThemeModal />
+		</div>
 	</div>
 </div>
-
-<style>
-	#header-explain {
-		-webkit-user-drag: none;
-		user-select: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-ms-user-select: none;
-	}
-</style>

@@ -4,6 +4,7 @@
 	import { wordGraph } from '$lib/stores/word-graph-store';
 	import { WordGraph } from '$lib/graph';
 	import LoadingPage from '../../../components/loading-page.svelte';
+	import Progress from '../progress.svelte';
 
 	async function fetchWordList(url: URL) {
 		let response = await fetch(url);
@@ -44,12 +45,6 @@
 	});
 </script>
 
-<div class="flex flex-col h-full">
-	<ul class="steps flex-none">
-		<li class="step step-primary">Select Rule</li>
-		<li class="step step">Set Default</li>
-	</ul>
-	<div class="grow">
-		<LoadingPage text={'Loading Rule...'} />
-	</div>
-</div>
+<Progress stepIdx={0}>
+	<LoadingPage text={'Loading Rule...'} />
+</Progress>

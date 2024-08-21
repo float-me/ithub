@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { current, root } from '$lib/stores/word-node-store';
 	import { Head, WordNode } from '$lib/word';
+	import Progress from '../progress.svelte';
 
 	let value: string = '';
 	function handleKeyDown(event: KeyboardEvent) {
@@ -20,35 +21,30 @@
 	}
 </script>
 
-<div class="flex flex-col">
-	<ul class="steps flex-none">
-		<li class="step step-primary">Select Rule</li>
-		<li class="step step-primary">Set Default</li>
-	</ul>
-</div>
-
-<div role="alert" class="alert">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		fill="none"
-		viewBox="0 0 24 24"
-		class="stroke-info h-6 w-6 shrink-0"
-	>
-		<path
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			stroke-width="2"
-			d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-		></path>
-	</svg>
-	<span>시작 음절을 입력하세요! (스페이스로 넘어가기)</span>
-</div>
-<div class="m-4">
-	<input
-		class="input input-accent"
-		on:keydown={handleKeyDown}
-		bind:value
-		use:init
-		spellcheck="false"
-	/>
-</div>
+<Progress stepIdx={1}>
+	<div role="alert" class="alert">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			class="stroke-info h-6 w-6 shrink-0"
+		>
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			></path>
+		</svg>
+		<span>시작 음절을 입력하세요! (스페이스로 넘어가기)</span>
+	</div>
+	<div class="m-4">
+		<input
+			class="input input-accent"
+			on:keydown={handleKeyDown}
+			bind:value
+			use:init
+			spellcheck="false"
+		/>
+	</div>
+</Progress>
