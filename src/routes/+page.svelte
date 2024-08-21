@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { wordGraph } from '$lib/stores/word-graph-store';
 	import { WordGraph } from '$lib/graph';
+	import LoadingPage from './components/loading-page.svelte';
 
 	async function fetchWordList(url: URL) {
 		let response = await fetch(url);
@@ -43,4 +44,4 @@
 	});
 </script>
 
-<span class="loading loading-dots loading-lg"></span>
+<LoadingPage />

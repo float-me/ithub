@@ -42,18 +42,34 @@
 		document.documentElement.setAttribute('data-theme', theme);
 		dataTheme = theme;
 	}
+
+	export let mode = 'grid';
 </script>
 
-<div
-	class=" rounded-box grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
->
-	{#each themeValues as theme}
-		<ThemeSelector
-			{theme}
-			isSelected={theme === dataTheme}
-			on:click={() => {
-				setTheme(theme);
-			}}
-		/>
-	{/each}
-</div>
+{#if mode === 'grid'}
+	<div
+		class="rounded-box grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+	>
+		{#each themeValues as theme}
+			<ThemeSelector
+				{theme}
+				isSelected={theme === dataTheme}
+				on:click={() => {
+					setTheme(theme);
+				}}
+			/>
+		{/each}
+	</div>
+{:else if mode === 'flex'}
+	<div class="flex flex-wrap space-x-4 space-y-4">
+		{#each themeValues as theme}
+			<ThemeSelector
+				{theme}
+				isSelected={theme === dataTheme}
+				on:click={() => {
+					setTheme(theme);
+				}}
+			/>
+		{/each}
+	</div>
+{/if}

@@ -1,15 +1,9 @@
 <script lang="ts">
 	import WordTag from './word-tag.svelte';
 	import InputTag from './input-tag.svelte';
-	import { Head, WordNode } from '$lib/word';
 	import { wordGraph } from '$lib/stores/word-graph-store';
-	import { current, root } from '$lib/stores/word-node-store';
+	import { current } from '$lib/stores/word-node-store';
 
-	export let defaultHeadValue: string;
-	let defaultHead = new Head(defaultHeadValue, 0);
-
-	$current = new WordNode(defaultHead, undefined);
-	$root = $current;
 	$: isSelecting = $current.child !== undefined;
 
 	let inputTag: InputTag;
@@ -57,6 +51,7 @@
 	function handleKeyDown(event: KeyboardEvent) {
 		switch (event.key) {
 			case 'ArrowLeft':
+				event.preventDefault();
 				if (event.ctrlKey) {
 					$current = $current.root;
 				} else {
@@ -65,6 +60,7 @@
 				}
 				break;
 			case 'ArrowRight':
+				event.preventDefault();
 				if (event.ctrlKey) {
 					$current = $current.leaf;
 				} else {
@@ -75,11 +71,9 @@
 			case 'Control':
 				break;
 			default:
-				console.log('default case');
 				if (!isSelecting) {
 					inputTag.handleKeyDown(event);
 				} else {
-					console.log('selecting case');
 					$current.clearChild();
 					$current = $current;
 					inputTag.handleSelectingKeyDown(event);

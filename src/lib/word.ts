@@ -164,4 +164,34 @@ export class WordNode {
         }
         return [this.child.head.value]
     }
+
+    get info() {
+        let info: string
+        if (!this.parent) {
+            info = this.head.value
+        } else {
+            info = this.parentTail
+        }
+        if (this.tags.length > 0) {
+            info += `#${this.tags.join(" ")}`
+        }
+        if (this.head.index !== 0) info = `${this.head.index}${info}`
+        return info
+    }
+
+    foldNewick(): string {
+        let childs = this.routes
+        if (this.child) childs = [this.child, ...childs]
+
+        if (childs.length === 0) return this.info
+        if (childs.length === 1) return `${this.info}.${childs[0].foldNewick()}`
+
+        let childExpr = []
+        for (let i = 0; i < childs.length; i++) {
+            const child = childs[i];
+            let result = child.foldNewick()
+            childExpr.push(result)
+        }
+        return `${this.info}(${childExpr.join(",")})`
+    }
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import ThemeModal from './theme-controller/theme-modal.svelte';
-	import Logo from './logo.svelte';
+	import ThemeModal from '../theme-controller/theme-modal.svelte';
+	import Logo from '../components/logo.svelte';
 	import { onMount } from 'svelte';
 
 	function handleOnClick(event: Event) {
@@ -20,15 +20,12 @@
 	<div class="flex-none mr-4">
 		<Logo on:click={handleOnClick} {height} />
 	</div>
-	<div
-		id="header-explain"
-		class="flex-1 align-middle"
-		style="user-drag: none;"
-	>
+	<div id="header-explain" class="align-middle" style="user-drag: none;">
 		<p class="font-bold text-xl text-primary">잇허브</p>
 		<p class="text-sm pl-2">끝말잇기 연구 통합 플랫폼</p>
 	</div>
-	<div class="flex-none">
+	<button class="btn btn-ghost">Editor</button>
+	<div class="flex-none align-middle">
 		<ThemeModal />
 	</div>
 </div>

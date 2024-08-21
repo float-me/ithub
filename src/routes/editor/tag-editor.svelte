@@ -31,22 +31,28 @@
 	}
 </script>
 
-<div class="join join-vertical gap-4">
-	<div class="card bg-base-100 p-4">
-		<div class="flex flex-wrap gap-x-2 gap-y-4">
-			{#each $current.tags as name, index}
-				<Tag {name} {index} on:select={handleOnSelect} />
-			{/each}
+<div class="flex flex-col space-y-4 h-full">
+	<div class="grow">
+		<div class="rounded-md p-4 h-full bg-base-100">
+			<div class="flex flex-wrap gap-x-2 gap-y-4">
+				{#each $current.tags as name, index}
+					<Tag {name} {index} on:select={handleOnSelect} />
+				{/each}
+			</div>
 		</div>
 	</div>
-	<input
-		class="input w-max"
-		id="prop-editor-input"
-		bind:value
-		bind:this={inputBind}
-		on:keydown={handleKeyDown}
-		use:init
-		spellcheck="false"
-		autocomplete="off"
-	/>
+
+	<div class="flex-none">
+		<input
+			placeholder="Input tags..."
+			class="input w-max"
+			id="prop-editor-input"
+			bind:value
+			bind:this={inputBind}
+			on:keydown={handleKeyDown}
+			use:init
+			spellcheck="false"
+			autocomplete="off"
+		/>
+	</div>
 </div>

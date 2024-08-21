@@ -71,7 +71,7 @@
 	value={fullWord}
 	spellcheck="false"
 	autocomplete="off"
-	class="btn btn-accent"
+	class="btn btn-accent caret-transparent"
 	id="word-editor-input"
 	style={inputStyle}
 />

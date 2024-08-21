@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { current, root } from '$lib/stores/word-node-store';
+	import { Head, WordNode } from '$lib/word';
 
 	let value: string = '';
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === ' ') {
 			event.preventDefault();
 			if (value.length === 0) return;
-			goto('../editor', { state: { default: value[0] } });
+			goto('../editor');
+			let defaultHead = new Head(value[0], 0);
+
+			$current = new WordNode(defaultHead, undefined);
+			$root = $current;
 		}
 	}
 	function init(el: HTMLInputElement) {
